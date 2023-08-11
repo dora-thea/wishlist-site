@@ -25,10 +25,12 @@ class Wish(models.Model):
     summary = models.TextField(max_length=1000, help_text="Enter a brief description of the wish")
     price = models.FloatField(default=0)
     link = models.URLField(max_length=200, null=True)
-    booked_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, default=None, related_name='booked_wishes')
+    booked_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, default=None,
+                                  related_name='booked_wishes')
     category = models.ManyToManyField(Category, help_text="Select a category for this wish")
+
     # ManyToManyField used because category can contain many wishes. Wishes can cover many categories.
-    # Category class has already been defined so we can specify the object above.
+    # Category class has already been defined, so we can specify the object above.
 
     def __str__(self):
         """
@@ -40,7 +42,6 @@ class Wish(models.Model):
         if not self.created_by_id:
             self.created_by = kwargs.pop('created_by', None)
         super().save(*args, **kwargs)
-
 
     def get_absolute_url(self):
         """

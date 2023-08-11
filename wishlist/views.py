@@ -1,4 +1,3 @@
-from django.contrib.auth.models import User
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -10,14 +9,11 @@ from .models import Category, Wish, Friendship
 
 def index(request):
     """
-    Функция отображения для домашней страницы сайта.
+    Display function for the home page of the site.
     """
-    # Генерация "количеств" некоторых главных объектов
     num_wishes = Wish.objects.all().count()
     num_categories = Category.objects.all().count()
 
-    # Отрисовка HTML-шаблона index.html с данными внутри
-    # переменной контекста context
     return render(
         request,
         'index.html',
@@ -42,8 +38,7 @@ class FriendWishListView(generic.ListView):
     def get_queryset(self):
         queryset = super().get_queryset()
         pk = self.kwargs['pk']
-        # Используйте значение pk для фильтрации queryset
-        friend_obj = Friendship.objects.get(pk=pk).user
+        friend_obj = get_object_or_404(Friendship, pk=pk).user
         queryset = queryset.filter(created_by=friend_obj)
         return queryset
 

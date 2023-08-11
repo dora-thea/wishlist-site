@@ -5,11 +5,10 @@ from .models import Category, Wish, Friendship
 admin.site.register(Category)
 admin.site.register(Friendship)
 
-# Register the Admin classes for Book using the decorator
 
+# Register the Admin classes for Book using the decorator
 @admin.register(Wish)
 class WishAdmin(admin.ModelAdmin):
     list_display = ('created_by', 'title', 'price', 'display_category', 'booked_by')
     list_filter = ('price', 'booked_by', 'created_by')
     fields = ['created_by', ('title', 'booked_by'), 'summary', ('price', 'link'), 'category']
-
