@@ -1,0 +1,35 @@
+{% extends "base_generic.html" %}
+
+
+{% block content %}
+    <h1><i>{{ request.user.username }}'s</i> Wishlist </h1>
+    <form method="post" action="{% url 'wish-create' %}">
+    {% csrf_token %}
+        <button>Create a new wish!</button>
+    </form>
+
+    <hr/>
+
+    {% if wish_list %}
+    <ul>
+
+      {% for wish in wish_list %}
+      <li>
+        <a href="{% url 'wish-detail' wish.pk %}">{{wish.title}}</a> ({{ wish.price }})
+        <div class="dropdown">
+            <button>...</button>
+            <div class="dropdown-content">
+                <a rel="noopener" target="_blank" href="{% url 'wish-update' wish.pk %}">Update</a>
+                <a rel="noopener" target="_blank" href="{% url 'wish-delete' wish.pk %}">Delete</a>
+            </div>
+        </div>
+
+
+      </li>
+      {% endfor %}
+    </ul>
+
+    {% else %}
+      <p>There are no wishes.</p>
+    {% endif %}
+{% endblock %}

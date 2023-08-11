@@ -1,0 +1,20 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+    <h1>{{ wish.title }}</h1>
+    {% if user.is_authenticated %}
+        {% if wish.created_by.username != user.username %}
+            <p><strong>Booked:</strong> {% if wish.booked_by %} Yes {% else %} No {% endif %} </p>
+        {% endif %}
+    {% endif %}
+
+    <p><strong>Summary:</strong> {{ wish.summary }}</p>
+    <p><strong>Created by:</strong> {{ wish.created_by }}</p>
+    <p><strong>Price:</strong> {{ wish.price }}</p>
+    <p><strong>Link:</strong> <a href="{{ wish.link }}">{{ wish.link }}</a></p>
+    <p><strong>Category:</strong> {% for category in wish.category.all %} {{ category }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+
+
+
+{% endblock %}

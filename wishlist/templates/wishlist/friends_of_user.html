@@ -1,0 +1,24 @@
+{% extends "base_generic.html" %}
+
+
+{% block content %}
+    <h1><i>{{ request.user.username }}'s</i> Friends </h1>
+
+    <hr/>
+
+    {% if friendship_list %}
+    <ul>
+
+      {% for friend in friendship_list %}
+      <li>
+
+        <a href="{% url 'friend-wishes' friend.user.pk%}">{{ friend.user }}</a>
+
+      </li>
+      {% endfor %}
+    </ul>
+
+    {% else %}
+      <p>There are no friends.</p>
+    {% endif %}
+{% endblock %}

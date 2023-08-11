@@ -1,0 +1,23 @@
+{% extends "base_generic.html" %}
+
+
+{% block content %}
+    <h1>Booked by <i>{{ request.user.username }} </i></h1>
+
+    <hr/>
+
+    {% if wish_list %}
+    <ul>
+
+      {% for wish in wish_list %}
+      <li>
+        <a href="{% url 'wish-detail' wish.pk %}">{{wish.title}}</a> ({{ wish.price }})
+
+      </li>
+      {% endfor %}
+    </ul>
+
+    {% else %}
+      <p>There are no wishes.</p>
+    {% endif %}
+{% endblock %}

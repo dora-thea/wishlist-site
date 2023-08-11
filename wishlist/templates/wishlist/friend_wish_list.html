@@ -1,0 +1,25 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <h1>Wish List</h1>
+
+    {% if wish_list %}
+    <ul>
+
+        {% for wish in wish_list %}
+            <li>
+            <a href="{{ wish.get_absolute_url }}">{{ wish.title }}</a> (Price: {{ wish.price }})
+            <form method="post" action="">
+                {% csrf_token %}
+                <input type="hidden" name="Booked" value="0" />
+                <input type="checkbox" name="Booked" value="1" id="Booked" />
+                <label for="Booked"> Booked &nbsp</label>
+            </form>
+            </li>
+        {% endfor %}
+
+    </ul>
+    {% else %}
+      <p>There are no wishes.</p>
+    {% endif %}
+{% endblock %}

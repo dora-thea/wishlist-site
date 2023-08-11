@@ -1,0 +1,18 @@
+{% extends "base_generic.html" %}
+
+{% block title %}<title>My Wishlist</title>{% endblock %}
+
+{% block content %}
+<h1>My Wishlist Home</h1>
+    <hr />
+
+    <p>Welcome to <em>My Wishlist</em>, a very basic Django website developed by <a target="_blank" href="https://github.com/dora-thea" >@dora-thea</a>.</p>
+
+    <p>The wishlist has the following record counts:</p>
+
+    <ul>
+    <li><strong>Wishes:</strong> {{ num_wishes }}</li>
+    <li><strong>Categories:</strong> {{ num_categories }}</li>
+  </ul>
+
+{% endblock %}
