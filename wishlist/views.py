@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 
@@ -21,8 +21,13 @@ def index(request):
     )
 
 
-class WishDetailView(LoginRequiredMixin, generic.DetailView):
+class WishDetailView(LoginRequiredMixin, UserPassesTestMixin, generic.DetailView):
     model = Wish
+
+    def test_func(self):
+        wish = self.get_object()
+        return self.request.user == wish.created_by or Friendship.objects.filter(user=self.request.user,
+                                                                                 friend=wish.created_by).exists()
 
 
 class CategoryListView(LoginRequiredMixin, generic.ListView):
@@ -30,7 +35,7 @@ class CategoryListView(LoginRequiredMixin, generic.ListView):
     paginate_by = 15
 
 
-class FriendWishListView(generic.ListView):
+class FriendWishListView(LoginRequiredMixin, generic.ListView):
     model = Wish
     template_name = 'wishlist/friend_wish_list.html'
     paginate_by = 10
@@ -90,9 +95,13 @@ class WishCreate(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class WishUpdate(LoginRequiredMixin, UpdateView):
+class WishUpdate(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Wish
     fields = ['summary', 'price', 'link', 'category']
+
+    def test_func(self):
+        wish = self.get_object()
+        return self.request.user == wish.created_by
 
 
 def change_status_booked(request, pk):
@@ -103,6 +112,10 @@ def change_status_booked(request, pk):
     return render(request, 'wishlist/friend_wish_list.html')
 
 
-class WishDelete(LoginRequiredMixin, DeleteView):
+class WishDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Wish
     success_url = reverse_lazy('my-wishes')
+
+    def test_func(self):
+        wish = self.get_object()
+        return self.request.user == wish.created_by
