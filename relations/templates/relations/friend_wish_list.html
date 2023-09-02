@@ -9,12 +9,14 @@
         {% for wish in wish_list %}
             <li>
             <a href="{{ wish.get_absolute_url }}">{{ wish.title }}</a> (Price: {{ wish.price }})
-            <form method="post" action="">
-                {% csrf_token %}
-                <input type="hidden" name="Booked" value="0" />
-                <input type="checkbox" name="Booked" value="1" id="Booked" />
-                <label for="Booked"> Booked &nbsp</label>
-            </form>
+                <div class="element-inline">
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="book" value="{{ wish.pk }}" />
+                        <input class="booking-button" type="submit" value="Book the wish!" />
+                    </form>
+                </div>
             </li>
         {% endfor %}
 

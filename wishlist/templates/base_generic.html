@@ -26,12 +26,17 @@
       {% block sidebar %}
       <ul class="sidebar-nav">
           <li><a href="{% url 'index' %}">Home</a></li>
+          <p></p>
 
               {% if user.is_authenticated %}
                   <li>User: {{ user.get_username }}</li>
-                  <li><a href="{% url 'my-wishes' %}">{{ request.user.username }}'s Wishlist</a></li>
+                  <li><a href="{% url 'my-wishes' %}"><em>{{ request.user.username }}</em>'s Wishlist</a></li>
                   <li><a href="{% url 'my-booked' %}">Booked by {{ request.user.username }}</a></li>
-                  <li><a href="{% url 'my-friends' %}">{{ request.user.username }} Friends</a></li>
+                  <p></p>
+                  <li><a href="{% url 'all-users' %}">All users</a></li>
+                  <li><a href="{% url 'my-friends' %}"><em>{{ request.user.username }}</em>'s Friends</a></li>
+                  <li><a href="{% url 'friendship-requests' %}">Pending requests</a></li>
+                  <p></p>
                   <li><a href="{% url 'logout'%}?next={{request.path}}">Logout</a></li>
               {% else %}
                   <li><a href="{% url 'login'%}?next={{request.path}}">Login</a></li>
