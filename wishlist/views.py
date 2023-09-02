@@ -4,7 +4,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 
-from .models import Category, Wish, Friendship
+from django.contrib.auth.models import User
+
+from relations.models import Friendship
+from .models import Category, Wish
 
 
 def index(request):
@@ -26,26 +29,8 @@ class WishDetailView(LoginRequiredMixin, UserPassesTestMixin, generic.DetailView
 
     def test_func(self):
         wish = self.get_object()
-        return self.request.user == wish.created_by or Friendship.objects.filter(user=self.request.user,
-                                                                                 friend=wish.created_by).exists()
-
-
-class CategoryListView(LoginRequiredMixin, generic.ListView):
-    model = Category
-    paginate_by = 15
-
-
-class FriendWishListView(LoginRequiredMixin, generic.ListView):
-    model = Wish
-    template_name = 'wishlist/friend_wish_list.html'
-    paginate_by = 10
-
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        pk = self.kwargs['pk']
-        friend_obj = get_object_or_404(Friendship, pk=pk).user
-        queryset = queryset.filter(created_by=friend_obj)
-        return queryset
+        return self.request.user == wish.created_by or Friendship.objects.filter(to_user=self.request.user,
+                                                                                 from_user=wish.created_by).exists()
 
 
 class WishesByUserListView(LoginRequiredMixin, generic.ListView):
@@ -72,18 +57,6 @@ class BookedByUserListView(LoginRequiredMixin, generic.ListView):
         return Wish.objects.filter(booked_by=self.request.user).order_by('price')
 
 
-class FriendsOfUserListView(LoginRequiredMixin, generic.ListView):
-    """
-    Generic class-based view listing friends of current user.
-    """
-    model = Friendship
-    template_name = 'wishlist/friends_of_user.html'
-    paginate_by = 10
-
-    def get_queryset(self):
-        return Friendship.objects.filter(friend=self.request.user)
-
-
 class WishCreate(LoginRequiredMixin, CreateView):
     model = Wish
     fields = ['title', 'summary', 'price', 'link', 'category']
@@ -104,14 +77,6 @@ class WishUpdate(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return self.request.user == wish.created_by
 
 
-def change_status_booked(request, pk):
-    wish = get_object_or_404(Wish, pk=pk)
-    if request.method == 'POST':
-        wish.booked_by = request.POST.get('Booked')
-        wish.save()
-    return render(request, 'wishlist/friend_wish_list.html')
-
-
 class WishDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Wish
     success_url = reverse_lazy('my-wishes')
@@ -119,3 +84,11 @@ class WishDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         wish = self.get_object()
         return self.request.user == wish.created_by
+
+
+def change_status_booked(request, pk):
+    wish = get_object_or_404(Wish, pk=pk)
+    if request.method == 'POST':
+        wish.booked_by = request.POST.get('Booked')
+        wish.save()
+    return render(request, 'relations/friend_wish_list.html')

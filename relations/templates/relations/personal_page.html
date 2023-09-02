@@ -1,0 +1,20 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <h1>{{ user.username }}</h1>
+
+    {% if friendship_exists %}
+        <p>You are already friends with <em>{{ user.username }}</em>!</p>
+        <a href="{% url 'friend-wishes' user.pk %}">Choose a gift!</a>
+    {% elif request_exists %}
+        <p>You have already sent a friendship request to <em>{{ user.username }}</em>!</p>
+    {% else %}
+    {% if not to_username == request.user.username %}
+        <form method="post">{% csrf_token %}
+            <input type="hidden" name="to_username" value="{{ user.username }}" />
+            <input class="button" type="submit" value="Add {{ user.username}} as a friend" />
+        </form>
+    {% endif %}
+    {% endif %}
+
+{% endblock %}

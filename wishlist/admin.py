@@ -1,9 +1,8 @@
 from django.contrib import admin
-from .models import Category, Wish, Friendship
+from .models import Category, Wish
 
 # Register your models here.
 admin.site.register(Category)
-admin.site.register(Friendship)
 
 
 # Register the Admin classes for Book using the decorator

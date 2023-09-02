@@ -12,7 +12,7 @@
       {% for friend in friendship_list %}
       <li>
 
-        <a href="{% url 'friend-wishes' friend.user.pk%}">{{ friend.user }}</a>
+        <a href="{% url 'friend-wishes' friend.from_user.pk%}">{{ friend.from_user }}</a>
 
       </li>
       {% endfor %}

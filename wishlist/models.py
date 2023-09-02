@@ -56,11 +56,3 @@ class Wish(models.Model):
         return ', '.join([category.name for category in self.category.all()[:3]])
 
     display_category.short_description = 'Category'
-
-
-class Friendship(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='friends')
-    friend = models.ForeignKey(User, on_delete=models.CASCADE, related_name='friend_of')
-
-    def __str__(self):
-        return f"{self.user.username} - {self.friend.username}"
